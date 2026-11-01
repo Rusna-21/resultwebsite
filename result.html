@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Marks Calculator</title>
+</head>
+<body>
+
+<h2>Student Marks & Grade Calculator</h2>
+
+Name: <input type="text" id="name" value="Fathima Rusna"><br><br>
+
+Gender:
+<input type="radio" name="gender" value="Male" checked> Male
+<input type="radio" name="gender" value="Female"> Female<br><br>
+
+Course:
+<input type="checkbox" value="HNDIT" class="course" checked> HNDIT
+<input type="checkbox" value="HNDSE" class="course" checked> HNDE
+<input type="checkbox" value="HNDJA" class="course"> HNDA<br><br>
+
+<table border="1" cellpadding="10">
+<tr><th>Subject</th><th>Marks</th><th>Grade</th></tr>
+<tr>
+<td>Machine Learning</td>
+<td><input type="number" id="m1" value="85"></td>
+<td id="g1">A</td>
+</tr>
+<tr>
+<td>Computer Network</td>
+<td><input type="number" id="m2" value="60"></td>
+<td id="g2">B</td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td><input type="number" id="m3" value="30"></td>
+<td id="g3">D</td>
+</tr>
+<tr><th colspan="2">Average</th><th id="avg">58.33</th></tr>
+</table>
+
+<br>
+<button onclick="calculate()">Calculate</button>
+<button onclick="nextPage()">Click</button>
+
+<script>
+function calculate() {
+    let marks = [
+        Number(document.getElementById("m1").value),
+        Number(document.getElementById("m2").value),
+        Number(document.getElementById("m3").value)
+    ];
+
+    for (let i = 0; i < 3; i++) {
+        if (marks[i] < 0 || marks[i] > 100) {
+            alert("Enter marks between 0 and 100");
+            return;
+        }
+
+        document.getElementById("g" + (i + 1)).innerText =
+            marks[i] >= 75 ? "A" :
+            marks[i] >= 60 ? "B" :
+            marks[i] >= 40 ? "C" : "D";
+    }
+
+    document.getElementById("avg").innerText =
+        (marks.reduce((a, b) => a + b, 0) / 3).toFixed(2);
+}
+
+function nextPage() {
+    calculate();
+
+    let name = document.getElementById("name").value;
+    let gender = document.querySelector(
+        'input[name="gender"]:checked'
+    ).value;
+
+    let courses = [...document.querySelectorAll(".course:checked")]
+        .map(c => c.value).join(", ");
+
+    let marks = [
+        document.getElementById("m1").value,
+        document.getElementById("m2").value,
+        document.getElementById("m3").value
+    ];
+
+    let grades = ["g1", "g2", "g3"].map(
+        id => document.getElementById(id).innerText
+    );
+
+    let average = document.getElementById("avg").innerText;
+
+    let result = `
+    <h1>Student Results</h1>
+    <p>Name: ${name}</p>
+    <p>Gender: ${gender}</p>
+    <p>Course: ${courses || "None selected"}</p>
+    <table border="1" cellpadding="10">
+    <tr><th>Subject</th><th>Marks</th><th>Grade</th></tr>
+    <tr><td>Machine Learning</td><td>${marks[0]}</td><td>${grades[0]}</td></tr>
+    <tr><td>Computer Network</td><td>${marks[1]}</td><td>${grades[1]}</td></tr>
+    <tr><td>Architecture</td><td>${marks[2]}</td><td>${grades[2]}</td></tr>
+    <tr><th colspan="2">Average</th><th>${average}</th></tr>
+    </table>
+    `;
+
+    let page = window.open("", "_blank");
+    page.document.write(result);
+    page.document.close();
+}
+</script>
+
+</body>
+</html>
